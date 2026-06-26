@@ -1,201 +1,203 @@
 # 💰 Caixa
 
-> ### Suas finanças em um número só.
+> ### Your finances in a single number.
 
-Um sistema web de finanças pessoais para **aposentar a planilha**: lance uma vez e veja saldo, balanço do mês e a previsão do próximo — tudo num painel visual com _big numbers_, gráficos e previsibilidade.
+A web app for personal finance built to **retire the spreadsheet**: log a transaction once and instantly see your balance, the month's net result and next month's forecast — all in a visual dashboard with _big numbers_, charts and predictability.
 
 ![React](https://img.shields.io/badge/React-18-149ECA?logo=react&logoColor=white&style=for-the-badge)
 ![Vite](https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white&style=for-the-badge)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-06B6D4?logo=tailwindcss&logoColor=white&style=for-the-badge)
 ![Supabase](https://img.shields.io/badge/Supabase-Auth%20%2B%20DB-3FCF8E?logo=supabase&logoColor=white&style=for-the-badge)
 
-![Status](https://img.shields.io/badge/status-em%20desenvolvimento-0B3D2E?style=flat-square)
-![License](https://img.shields.io/badge/licen%C3%A7a-MIT-0B3D2E?style=flat-square)
-![PRs](https://img.shields.io/badge/PRs-bem--vindos-0E7C5A?style=flat-square)
+![Status](https://img.shields.io/badge/status-in%20development-0B3D2E?style=flat-square)
+![License](https://img.shields.io/badge/license-MIT-0B3D2E?style=flat-square)
+![PRs](https://img.shields.io/badge/PRs-welcome-0E7C5A?style=flat-square)
 
 ---
 
-## Índice
+## Table of Contents
 
-- [Funcionalidades](#funcionalidades)
-- [Capturas de tela](#capturas-de-tela)
-- [Tecnologias](#tecnologias)
-- [Começando](#começando)
-- [Estrutura do projeto](#estrutura-do-projeto)
-- [Arquitetura](#arquitetura)
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Architecture](#architecture)
 - [Roadmap](#roadmap)
-- [Licença](#licença)
+- [License](#license)
 
 ---
 
-## Funcionalidades
+## Features
 
-O **Caixa** abandona o modelo de várias planilhas (gasto fixo, renda fixa, dívidas) e usa um **modelo de transação único** com formulário inteligente. Tudo é um lançamento — o que muda são as _flags_.
+**Caixa** drops the multi-spreadsheet model (fixed expenses, fixed income, debts) in favor of a **single transaction model** with a smart form. Everything is one entry — what changes are the _flags_.
 
-### 🔐 Autenticação e segurança
+### 🔐 Authentication & security
 
-- Cadastro e login reais via **Supabase Auth**.
-- Cada usuário tem seus dados **isolados no banco** por _Row Level Security_ — ninguém vê as finanças de ninguém.
+- Real sign up and login powered by **Supabase Auth**.
+- Each user's data is **isolated at the database level** via _Row Level Security_ — no one sees anyone else's finances.
 
-### 📊 Dashboard estratégico
+### 📊 Strategic dashboard
 
-- **Big numbers**: Saldo atual, Receitas, Despesas e Balanço do mês.
-- **Gráficos**: pizza de gastos por categoria e histórico de 6 meses (receitas × despesas).
-- **Previsão automática** do mês seguinte, somando recorrentes, parcelas futuras e contas agendadas — sem planilha de projeção.
+- **Big numbers**: current balance, income, expenses and the month's net result.
+- **Charts**: spending-by-category pie and a 6-month history (income × expenses).
+- **Automatic forecast** for the upcoming month, summing recurring entries, future installments and scheduled bills — no projection spreadsheet needed.
 
-### ⚡ Lançamento único e dinâmico
+### ⚡ Single, dynamic entry
 
-- Botão sempre acessível para registrar uma movimentação em segundos.
-- O formulário muda conforme o tipo: **Receita · Despesa · Transferência · Investimento**.
-- Flags: **Recorrente** (repete todo mês), **Pendente** (não desconta do saldo até ser paga) e **Parcelado** (gera as parcelas futuras automaticamente, ex.: 1/12).
-- Editar, excluir e estornar qualquer lançamento na listagem.
+- An always-available button to record a transaction in seconds.
+- The form adapts to the type: **Income · Expense · Transfer · Investment**.
+- Flags: **Recurring** (repeats every month), **Pending** (doesn't affect the balance until paid) and **Installment** (auto-generates future installments, e.g. 1/12).
+- Edit, delete or reverse any entry from the list.
 
-### 🗂️ Organização
+### 🗂️ Organization
 
-- **Categorias** com cores para alimentar os gráficos.
-- **Contas e carteiras** (Nubank, Itaú, dinheiro físico…) com saldo individual.
-- **Orçamentos** com teto mensal por categoria e barra de progresso.
-- **Metas / caixinhas** com valor-alvo e depósito/retirada.
+- **Categories** with colors that feed the charts.
+- **Accounts & wallets** (banks, cash, etc.) with individual balances.
+- **Budgets** with a monthly cap per category and a progress bar.
+- **Goals / pots** with a target amount and deposit/withdraw.
 
-### 📈 Investimentos
+### 📈 Investments
 
-- Lançamentos com **taxa de rendimento** e **vencimento**, com projeção do valor futuro por juros compostos.
+- Entries with an **expected yield rate** and **maturity date**, projecting the future value via compound interest.
 
-### 🎨 Experiência
+### 🎨 Experience
 
-- **Modo escuro** com troca instantânea e sem _flash_ ao carregar.
-- **Responsivo**: sidebar no desktop e menu _hambúrguer_ com _drawer_ no mobile.
-- Seletor de mês global e tipografia pensada para números (figuras tabulares).
+- **Dark mode** with instant switching and no _flash_ on load.
+- **Responsive**: sidebar on desktop, hamburger menu with a _drawer_ on mobile.
+- Global month selector and number-first typography (tabular figures).
 
 ---
 
-## Capturas de tela
+## Screenshots
 
-Salve suas imagens na pasta `docs/` e referencie-as aqui. Exemplo de duas telas lado a lado:
+Save your images under the `docs/` folder and reference them here. Example with two screens side by side:
 
 ```markdown
-| Tema claro | Tema escuro |
+| Light theme | Dark theme |
 | :---: | :---: |
-| ![Dashboard claro](docs/dashboard-light.png) | ![Dashboard escuro](docs/dashboard-dark.png) |
+| ![Dashboard light](docs/dashboard-light.png) | ![Dashboard dark](docs/dashboard-dark.png) |
 ```
 
 ---
 
-## Tecnologias
+## Tech Stack
 
-| Camada | Stack |
+| Layer | Stack |
 | --- | --- |
 | **Front-end** | React 18 + Vite |
-| **Estilo** | Tailwind CSS (tokens de cor via variáveis CSS) |
-| **Estado** | Zustand |
-| **Rotas** | React Router |
-| **Gráficos** | Recharts |
-| **Ícones** | Lucide |
+| **Styling** | Tailwind CSS (color tokens via CSS variables) |
+| **State** | Zustand |
+| **Routing** | React Router |
+| **Charts** | Recharts |
+| **Icons** | Lucide |
 | **Back-end** | Supabase (Auth + PostgreSQL + RLS) |
 
 ---
 
-## Começando
+## Getting Started
 
-### Pré-requisitos
+### Prerequisites
 
 - **Node.js 18+**
-- Uma conta gratuita no [Supabase](https://supabase.com)
+- A free [Supabase](https://supabase.com) account
 
-### 1. Clonar e instalar
+### 1. Clone and install
 
 ```bash
-git clone https://github.com/SEU-USUARIO/caixa.git
+git clone https://github.com/YOUR-USERNAME/caixa.git
 cd caixa
 npm install
 ```
 
-### 2. Configurar o Supabase
+### 2. Set up Supabase
 
-1. Crie um projeto novo no Supabase.
-2. Em **SQL Editor**, cole e rode o conteúdo de [`supabase/schema.sql`](supabase/schema.sql). Isso cria as tabelas já com **Row Level Security**.
-3. Em **Project Settings → API**, copie a _Project URL_ e a _anon public key_.
-4. _(Recomendado em dev)_ Em **Authentication → Email**, desligue **"Confirm email"** para entrar direto após o cadastro.
+1. Create a new project on Supabase.
+2. In the **SQL Editor**, paste and run the contents of [`supabase/schema.sql`](supabase/schema.sql). This creates the tables with **Row Level Security** already enabled.
+3. In **Project Settings → API**, copy the _Project URL_ and the _anon public key_.
+4. _(Recommended in dev)_ In **Authentication → Email**, turn off **"Confirm email"** to sign in right after registering.
 
-### 3. Variáveis de ambiente
+### 3. Environment variables
 
 ```bash
 cp .env.example .env
 ```
 
 ```env
-VITE_SUPABASE_URL=https://SEU-PROJETO.supabase.co
-VITE_SUPABASE_ANON_KEY=sua-anon-public-key
+VITE_SUPABASE_URL=https://YOUR-PROJECT.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-public-key
 ```
 
-### 4. Rodar
+### 4. Run
 
 ```bash
-npm run dev       # ambiente de desenvolvimento
-npm run build     # build de produção
-npm run preview   # pré-visualiza o build
+npm run dev       # development server
+npm run build     # production build
+npm run preview   # preview the build
 ```
 
-Abra o endereço indicado pelo Vite, crie sua conta e comece a lançar. Uma conta nova começa vazia — em **Configurações → Restaurar exemplo** você popula com dados de demonstração.
+Open the URL printed by Vite, create your account and start logging. A new account starts empty — go to **Settings → "Restaurar exemplo"** to populate it with demo data.
+
+> The app's interface is in Brazilian Portuguese and uses BRL (R$) formatting.
 
 ---
 
-## Estrutura do projeto
+## Project Structure
 
 ```
 caixa/
 ├─ src/
 │  ├─ lib/
-│  │  ├─ supabase.js     # cliente Supabase (lê o .env)
-│  │  ├─ store.js        # ÚNICA camada de dados: auth + acesso ao banco
-│  │  ├─ finance.js      # cálculos puros (saldos, resumos, previsão)
-│  │  ├─ theme.js        # preferência de tema (claro/escuro)
-│  │  ├─ format.js       # moeda BRL, datas, helpers
-│  │  └─ seed.js         # dados de exemplo
+│  │  ├─ supabase.js     # Supabase client (reads .env)
+│  │  ├─ store.js        # THE single data layer: auth + database access
+│  │  ├─ finance.js      # pure calculations (balances, summaries, forecast)
+│  │  ├─ theme.js        # theme preference (light/dark)
+│  │  ├─ format.js       # BRL currency, dates, helpers
+│  │  └─ seed.js         # sample data
 │  ├─ components/        # BigNumber, Progress, Empty, TxRow…
-│  ├─ pages/             # Dashboard, Transações, Contas, Orçamentos, Metas, Investimentos, Config
-│  ├─ TransactionModal.jsx   # formulário dinâmico
+│  ├─ pages/             # Dashboard, Transactions, Accounts, Budgets, Goals, Investments, Settings
+│  ├─ TransactionModal.jsx   # dynamic form
 │  ├─ Layout.jsx · Login.jsx · App.jsx · ui.jsx
 │  └─ index.css
 ├─ supabase/
-│  └─ schema.sql         # tabelas + RLS
+│  └─ schema.sql         # tables + RLS
 └─ index.html
 ```
 
 ---
 
-## Arquitetura
+## Architecture
 
-Duas decisões mantêm o sistema simples de evoluir:
+Two decisions keep the system easy to evolve:
 
-- **Documento JSON por linha.** Cada registro é guardado como `{ id, user_id, data }`, espelhando o objeto usado no app. Toda a lógica (saldos, previsões, gráficos) roda no cliente em `finance.js` — sem mapeamento de colunas e sem migração a cada campo novo.
-- **Camada de dados única.** Todo acesso ao banco está concentrado em `store.js`. As telas chamam ações com nomes estáveis (`addTransaction`, `addBudget`…), então trocar a fonte de dados não toca na interface.
+- **One JSON document per row.** Each record is stored as `{ id, user_id, data }`, mirroring the object used in the app. All logic (balances, forecasts, charts) runs on the client in `finance.js` — no column mapping and no migration for every new field.
+- **Single data layer.** All database access is concentrated in `store.js`. Screens call actions with stable names (`addTransaction`, `addBudget`…), so swapping the data source never touches the UI.
 
-O **isolamento por usuário** acontece no banco: as _policies_ de RLS garantem `auth.uid() = user_id` em toda leitura e escrita.
+**Per-user isolation** happens in the database: RLS policies enforce `auth.uid() = user_id` on every read and write.
 
 ---
 
 ## Roadmap
 
-Próximos passos avaliados a partir de um _benchmark_ com Mobills, Organizze, Monarch, Copilot e YNAB:
+Next steps drawn from a _benchmark_ against Mobills, Organizze, Monarch, Copilot and YNAB:
 
-- [ ] 📥 Importar / exportar **CSV** (migrar a planilha atual)
-- [ ] 📈 **Patrimônio** (net worth) ao longo do tempo
-- [ ] 💳 **Cartão de crédito / fatura** (competência × caixa)
-- [ ] 🔔 **Lembretes** de contas + calendário de vencimentos
-- [ ] 🏷️ **Tags** e subcategorias
-- [ ] 🔁 Motor de **recorrência** com frequência e data-fim
-- [ ] 📊 Seção de **Relatórios** e tendências
-- [ ] 📱 **PWA** instalável com bloqueio por biometria
-- [x] 🌙 **Modo escuro**
-- [x] 🔐 Autenticação real com isolamento por usuário
-
----
-
-## Licença
-
-Distribuído sob a licença **MIT**. Sinta-se livre para usar, modificar e compartilhar. _(Lembre-se de adicionar um arquivo `LICENSE` ao repositório.)_
+- [ ] 📥 Import / export **CSV** (migrate your current spreadsheet)
+- [ ] 📈 **Net worth** over time
+- [ ] 💳 **Credit card / statement** (accrual × cash basis)
+- [ ] 🔔 **Bill reminders** + due-date calendar
+- [ ] 🏷️ **Tags** and subcategories
+- [ ] 🔁 **Recurrence engine** with frequency and end date
+- [ ] 📊 **Reports** and trends section
+- [ ] 📱 Installable **PWA** with biometric lock
+- [x] 🌙 **Dark mode**
+- [x] 🔐 Real authentication with per-user isolation
 
 ---
 
-Feito com ☕ e um pouco de disciplina financeira. Se este projeto te ajudou, deixe uma ⭐ no repositório.
+## License
+
+Released under the **MIT** license. Feel free to use, modify and share. _(Remember to add a `LICENSE` file to the repository.)_
+
+---
+
+Made with ☕ and a bit of financial discipline. If this project helped you, leave a ⭐ on the repo.
