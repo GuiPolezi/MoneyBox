@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { useStore } from './lib/store'
+import { useTheme } from './lib/theme'
 import { isSupabaseConfigured } from './lib/supabase'
 import { UIProvider } from './ui'
 import Login from './Login'
@@ -17,13 +18,15 @@ import { Wallet, Loader2 } from 'lucide-react'
 
 export default function App() {
   const init = useStore((s) => s.init)
+  const themeInit = useTheme((s) => s.init)
   const booting = useStore((s) => s.booting)
   const ready = useStore((s) => s.ready)
   const session = useStore((s) => s.session)
 
   useEffect(() => {
+    themeInit()
     init()
-  }, [init])
+  }, [init, themeInit])
 
   if (!isSupabaseConfigured) return <ConfigNotice />
   if (booting) return <Splash label="Carregando…" />

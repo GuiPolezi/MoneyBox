@@ -70,7 +70,7 @@ export default function TransactionModal() {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-ink/40 backdrop-blur-sm p-0 sm:p-4"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center scrim backdrop-blur-sm p-0 sm:p-4"
       onClick={closeModal}
     >
       <div

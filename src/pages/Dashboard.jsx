@@ -4,6 +4,7 @@ import {
   XAxis, Tooltip, CartesianGrid,
 } from 'recharts'
 import { useStore } from '../lib/store'
+import { useTheme } from '../lib/theme'
 import { useUI } from '../ui'
 import { brl, monthLabel, addMonths } from '../lib/format'
 import {
@@ -16,6 +17,24 @@ import { Wallet, Target, TrendingUp, Clock, ArrowRight } from 'lucide-react'
 export default function Dashboard() {
   const { accounts, transactions, categories, budgets } = useStore()
   const { month, openNew } = useUI()
+  const dark = useTheme((s) => s.theme === 'dark')
+
+  // Cores dos gráficos que precisam acompanhar o tema
+  const chart = dark
+    ? {
+        grid: '#2A332D',
+        axis: '#94A296',
+        pos: '#34C795',
+        neg: '#F08A60',
+        tooltip: { background: '#1A211D', border: '1px solid #2A332D', borderRadius: 12, color: '#E6EAE6' },
+      }
+    : {
+        grid: '#E4E7E2',
+        axis: '#6B7280',
+        pos: '#0E7C5A',
+        neg: '#C2410C',
+        tooltip: { background: '#FFFFFF', border: '1px solid #E4E7E2', borderRadius: 12, color: '#16201A' },
+      }
 
   const summary = useMemo(() => monthSummary(transactions, month), [transactions, month])
   const balance = useMemo(() => totalBalance(accounts, transactions), [accounts, transactions])
@@ -102,7 +121,7 @@ export default function Dashboard() {
                     <Pie data={pie} dataKey="value" nameKey="name" innerRadius={48} outerRadius={72} paddingAngle={2}>
                       {pie.map((s) => <Cell key={s.id} fill={s.color} />)}
                     </Pie>
-                    <Tooltip formatter={(v) => brl(v)} />
+                    <Tooltip formatter={(v) => brl(v)} contentStyle={chart.tooltip} labelStyle={{ color: chart.tooltip.color }} itemStyle={{ color: chart.tooltip.color }} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
@@ -125,15 +144,18 @@ export default function Dashboard() {
           <div className="mt-3 h-52">
             <ResponsiveContainer>
               <BarChart data={history} barGap={4}>
-                <CartesianGrid vertical={false} stroke="#E4E7E2" />
+                <CartesianGrid vertical={false} stroke={chart.grid} />
                 <XAxis dataKey="label" tickLine={false} axisLine={false}
-                  tick={{ fontSize: 12, fill: '#6B7280' }} />
+                  tick={{ fontSize: 12, fill: chart.axis }} />
                 <Tooltip
                   formatter={(v, n) => [brl(v), n === 'receitas' ? 'Receitas' : 'Despesas']}
-                  cursor={{ fill: 'rgba(0,0,0,0.03)' }}
+                  cursor={{ fill: dark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)' }}
+                  contentStyle={chart.tooltip}
+                  labelStyle={{ color: chart.tooltip.color }}
+                  itemStyle={{ color: chart.tooltip.color }}
                 />
-                <Bar dataKey="receitas" fill="#0E7C5A" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="despesas" fill="#C2410C" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="receitas" fill={chart.pos} radius={[4, 4, 0, 0]} />
+                <Bar dataKey="despesas" fill={chart.neg} radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

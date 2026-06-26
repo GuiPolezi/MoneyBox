@@ -1,19 +1,23 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,jsx}'],
   theme: {
     extend: {
+      // As cores apontam para variáveis CSS (canais RGB), definidas em
+      // index.css para os temas claro (:root) e escuro (.dark). Isso mantém
+      // os modificadores de opacidade do Tailwind funcionando (ex.: bg-ink/40).
       colors: {
-        ink: '#16201A',
-        surface: '#F1F3F0',
-        card: '#FFFFFF',
-        line: '#E4E7E2',
-        muted: '#6B7280',
-        positive: '#0E7C5A',
-        negative: '#C2410C',
-        invest: '#1D4ED8',
-        transfer: '#7C6F5B',
-        brand: '#0B3D2E',
+        ink: 'rgb(var(--c-ink) / <alpha-value>)',
+        surface: 'rgb(var(--c-surface) / <alpha-value>)',
+        card: 'rgb(var(--c-card) / <alpha-value>)',
+        line: 'rgb(var(--c-line) / <alpha-value>)',
+        muted: 'rgb(var(--c-muted) / <alpha-value>)',
+        positive: 'rgb(var(--c-positive) / <alpha-value>)',
+        negative: 'rgb(var(--c-negative) / <alpha-value>)',
+        invest: 'rgb(var(--c-invest) / <alpha-value>)',
+        transfer: 'rgb(var(--c-transfer) / <alpha-value>)',
+        brand: 'rgb(var(--c-brand) / <alpha-value>)',
       },
       fontFamily: {
         display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],

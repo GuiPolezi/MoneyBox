@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { useStore } from './lib/store'
+import { useTheme } from './lib/theme'
 import { useUI } from './ui'
 import { monthLabel, addMonths } from './lib/format'
 import {
   LayoutDashboard, ArrowLeftRight, Wallet, Target,
   PiggyBank, TrendingUp, Settings, Plus, ChevronLeft,
-  ChevronRight, LogOut, Menu, X,
+  ChevronRight, LogOut, Menu, X, Sun, Moon,
 } from 'lucide-react'
 
 const nav = [
@@ -32,6 +33,7 @@ const titles = {
 // Conteúdo do menu compartilhado entre a sidebar (desktop) e o drawer (mobile).
 // onNavigate é passado só no mobile, para fechar o drawer ao tocar num item.
 function SidebarContent({ profile, logout, onNavigate }) {
+  const { theme, toggle } = useTheme()
   return (
     <>
       <div className="flex items-center justify-between gap-2.5 px-6 h-16 border-b border-line">
@@ -82,9 +84,18 @@ function SidebarContent({ profile, logout, onNavigate }) {
             <p className="truncate text-sm font-medium">{profile?.name}</p>
           </div>
           <button
+            onClick={toggle}
+            className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-ink/5 hover:text-ink transition"
+            title={theme === 'dark' ? 'Tema claro' : 'Tema escuro'}
+            aria-label="Alternar tema"
+          >
+            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+          <button
             onClick={logout}
-            className="text-muted hover:text-negative transition"
+            className="grid h-8 w-8 place-items-center rounded-lg text-muted hover:bg-negative/10 hover:text-negative transition"
             title="Sair"
+            aria-label="Sair"
           >
             <LogOut size={16} />
           </button>
@@ -126,7 +137,7 @@ export default function Layout({ children }) {
 
       {/* Backdrop — mobile */}
       <div
-        className={`fixed inset-0 z-40 bg-ink/40 backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
+        className={`fixed inset-0 z-40 scrim backdrop-blur-sm transition-opacity duration-300 lg:hidden ${
           menuOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
         }`}
         onClick={() => setMenuOpen(false)}
@@ -169,7 +180,7 @@ export default function Layout({ children }) {
 
           <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
             {/* Seletor de mês */}
-            <div className="flex items-center rounded-xl border border-line bg-white">
+            <div className="flex items-center rounded-xl border border-line bg-card">
               <button
                 className="grid h-9 w-8 sm:w-9 place-items-center text-muted hover:text-ink transition"
                 onClick={() => setMonth(addMonths(month, -1))}

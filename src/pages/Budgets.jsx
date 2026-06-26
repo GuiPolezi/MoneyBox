@@ -85,7 +85,7 @@ function BudgetModal({ cats, used, onClose, onSave }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 backdrop-blur-sm p-4" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center scrim backdrop-blur-sm p-4" onClick={onClose}>
       <div className="card w-full max-w-md p-6" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-5">
           <h2 className="font-display text-lg font-semibold">Novo orçamento</h2>

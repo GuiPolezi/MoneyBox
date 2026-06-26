@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =====================================================================
+   Tema (claro e escuro) — apenas variáveis de cor mudam.
+   Os valores são canais RGB ("r g b") para funcionar com a opacidade
+   do Tailwind (ex.: bg-positive/10).
+   ===================================================================== */
+:root {
+  --c-ink: 22 32 26;          /* #16201A */
+  --c-surface: 241 243 240;   /* #F1F3F0 */
+  --c-card: 255 255 255;      /* #FFFFFF */
+  --c-line: 228 231 226;      /* #E4E7E2 */
+  --c-muted: 107 114 128;     /* #6B7280 */
+  --c-positive: 14 124 90;    /* #0E7C5A */
+  --c-negative: 194 65 12;    /* #C2410C */
+  --c-invest: 29 78 216;      /* #1D4ED8 */
+  --c-transfer: 124 111 91;   /* #7C6F5B */
+  --c-brand: 11 61 46;        /* #0B3D2E */
+  color-scheme: light;
+}
+
+.dark {
+  --c-ink: 230 234 230;       /* texto quase branco */
+  --c-surface: 15 20 17;      /* fundo profundo */
+  --c-card: 26 33 29;         /* cartões um tom acima do fundo */
+  --c-line: 42 51 45;         /* bordas sutis */
+  --c-muted: 148 158 150;     /* texto secundário */
+  --c-positive: 52 199 149;   /* verde mais vivo no escuro */
+  --c-negative: 240 138 96;   /* laranja mais vivo */
+  --c-invest: 122 156 255;
+  --c-transfer: 170 158 138;
+  --c-brand: 20 110 80;       /* brand um pouco mais claro */
+  color-scheme: dark;
+}
+
 @layer base {
   html {
     -webkit-font-smoothing: antialiased;
@@ -9,7 +42,6 @@
   body {
     @apply bg-surface text-ink font-sans;
   }
-  /* Figuras tabulares deixam os números alinhados como num livro-caixa */
   .tnum {
     font-feature-settings: 'tnum' 1;
     font-variant-numeric: tabular-nums;
@@ -21,7 +53,7 @@
     @apply bg-card border border-line rounded-xl2 shadow-card;
   }
   .input {
-    @apply w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-sm text-ink
+    @apply w-full rounded-xl border border-line bg-card px-3.5 py-2.5 text-sm text-ink
       placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-positive/30 focus:border-positive/50 transition;
   }
   .label {
@@ -38,10 +70,14 @@
     @apply btn bg-transparent text-ink hover:bg-ink/5;
   }
   .btn-outline {
-    @apply btn border border-line bg-white text-ink hover:bg-ink/[0.03];
+    @apply btn border border-line bg-card text-ink hover:bg-ink/[0.03];
   }
   .chip {
     @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium;
+  }
+  /* Fundo escuro de modais/drawer — sempre escuro nos dois temas */
+  .scrim {
+    background-color: rgb(0 0 0 / 0.5);
   }
 }
 

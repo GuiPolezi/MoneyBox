@@ -4,7 +4,24 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f1f3f0" />
     <title>Caixa — Finanças</title>
+    <script>
+      // Aplica o tema ANTES da primeira pintura, evitando flash de tela clara.
+      (function () {
+        try {
+          var saved = localStorage.getItem('caixa-theme')
+          var dark = saved
+            ? saved === 'dark'
+            : window.matchMedia('(prefers-color-scheme: dark)').matches
+          if (dark) {
+            document.documentElement.classList.add('dark')
+            var m = document.querySelector('meta[name="theme-color"]')
+            if (m) m.setAttribute('content', '#0f1411')
+          }
+        } catch (e) {}
+      })()
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
