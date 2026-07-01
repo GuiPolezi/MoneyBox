@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light; }
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  background-color: #E9E3D2;
+  /* faint engraved-paper grain */
+  background-image:
+    repeating-linear-gradient(0deg, rgba(35,74,60,0.018) 0 1px, transparent 1px 3px),
+    radial-gradient(circle at 20% -10%, rgba(176,137,74,0.10), transparent 45%);
+  color: #1C2620;
+  font-family: 'Work Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* every monetary figure rides the ledger rail: tabular mono numerals */
+.figure {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+  letter-spacing: -0.01em;
+}
+
+/* hairline ledger rule */
+.rule { border-bottom: 1px solid #C8C0A8; }
+
+/* keyboard focus stays visible everywhere */
+:where(button, a, input, select, textarea):focus-visible {
+  outline: 2px solid #234A3C;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+/* recharts: quiet the default tooltip */
+.recharts-default-tooltip {
+  background: #F2EEE1 !important;
+  border: 1px solid #C8C0A8 !important;
+  border-radius: 2px !important;
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 12px !important;
+}
