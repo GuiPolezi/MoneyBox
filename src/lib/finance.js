@@ -70,31 +70,48 @@ export function projectNextBalance({
   return Number(balance) + Number(salary) - Number(openInvoiceBalance) - Number(obligations)
 }
 
-// Build a 6-month forward projection series for the dashboard chart.
+// Build a 6-month forward projection for the dashboard chart.
+//
+// It projects your NET POSITION each month: the cash you'd have minus what you
+// still owe on the card. Reading it as a single honest number avoids the old
+// double-count (where a deficit sat in the balance AND was re-charged as an
+// invoice next month).
+//
+//   net today        = balance − fatura em aberto
+//   next month (m=1) = net + salário − compromissos     (current invoice paid on payday, no penalty)
+//   later months     = if still negative, the debt rolls with interest first,
+//                      then + salário − compromissos
+//
+// Installments drop out of "compromissos" once they finish; fixed bills stay.
 export function projectionSeries({
   startMonth,
   balance,
   salary,
   openInvoiceBalance,
   interestRate,
-  obligations,
+  fixedTotal,
+  installments = [], // [{ amount, remaining }]
   months = 6,
 }) {
+  const obligationsAt = (m) =>
+    Number(fixedTotal) +
+    installments.reduce(
+      (s, i) => s + (m <= Number(i.remaining) ? Number(i.amount) : 0),
+      0
+    )
+
   const out = []
-  let running = Number(balance)
-  let invoice = Number(openInvoiceBalance)
+  let net = Number(balance) - Number(openInvoiceBalance) // net position today
 
   for (let m = 1; m <= months; m++) {
-    // payday: salary in, invoice paid (interest applied if it had to roll)
-    running += Number(salary) - invoice - Number(obligations)
-    // any negative cash this month means living on credit → next invoice grows,
-    // and unpaid debt accrues interest.
-    const shortfall = running < 0 ? Math.abs(running) : 0
-    invoice = shortfall > 0 ? shortfall * (1 + Number(interestRate)) : 0
-
+    // from the 2nd month on, any amount still owed (negative net) is debt that
+    // accrues interest before the next payday.
+    if (m > 1 && net < 0) net = net * (1 + Number(interestRate))
+    // payday: salary in, that month's obligations out.
+    net = net + Number(salary) - obligationsAt(m)
     out.push({
       label: monthLabel(addMonths(startMonth, m)),
-      projected: Math.round(running * 100) / 100,
+      projected: Math.round(net * 100) / 100,
     })
   }
   return out

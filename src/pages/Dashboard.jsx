@@ -1,21 +1,22 @@
 import { useMemo } from 'react'
 import {
   ResponsiveContainer, BarChart, Bar, Cell, XAxis, YAxis, Tooltip,
-  AreaChart, Area, LineChart, Line, CartesianGrid, ReferenceLine,
+  AreaChart, Area, CartesianGrid, ReferenceLine, LabelList,
 } from 'recharts'
 import { useFinance } from '../context/FinanceContext'
 import { Card, Money, Pill } from '../components/ui/primitives'
 import { Guilloche } from '../components/Ornament'
 import {
-  BRL, monthLabel, firstOfThisMonth, projectNextBalance, projectionSeries,
+  BRL, monthLabel, firstOfThisMonth, projectNextBalance,
 } from '../lib/finance'
 
 const axis = { fontFamily: 'IBM Plex Mono', fontSize: 11, fill: '#1C262099' }
 const compact = (n) => 'R$' + Math.round(n / 1).toLocaleString('pt-BR')
+const CAT_COLORS = ['#234A3C', '#B0894A', '#7E3030', '#6E7558', '#2F6450', '#C9A24B']
 
 export default function Dashboard() {
   const {
-    profile, openInvoiceBalance, obligations, snapshots, invoice,
+    profile, openInvoiceBalance, obligations, snapshots, movements,
   } = useFinance()
 
   const balance = Number(profile?.balance ?? 0)
@@ -39,19 +40,27 @@ export default function Dashboard() {
     })
   }, [snapshots])
 
-  // projeção
+  // projeção do próximo mês
   const nextBalance = projectNextBalance({
     balance, salary, openInvoiceBalance, obligations: obligations.total,
   })
-  const projSeries = useMemo(
-    () => projectionSeries({
-      startMonth: firstOfThisMonth(),
-      balance, salary, openInvoiceBalance,
-      interestRate: invoice?.interest_rate ?? 0.12,
-      obligations: obligations.total,
-    }),
-    [balance, salary, openInvoiceBalance, obligations.total, invoice]
-  )
+
+  // gastos por categoria (mês atual)
+  const categorySeries = useMemo(() => {
+    const now = new Date()
+    const map = {}
+    movements.forEach((m) => {
+      if (m.kind !== 'expense' || m.category === 'Fatura') return
+      const d = new Date(m.occurred_at)
+      if (d.getFullYear() !== now.getFullYear() || d.getMonth() !== now.getMonth()) return
+      const key = m.category || 'Outros'
+      map[key] = (map[key] || 0) + Number(m.amount)
+    })
+    return Object.entries(map)
+      .map(([category, total]) => ({ category, total }))
+      .sort((a, b) => b.total - a.total)
+  }, [movements])
+  const categoryTotal = categorySeries.reduce((s, c) => s + c.total, 0)
 
   return (
     <div className="space-y-8">
@@ -87,6 +96,7 @@ export default function Dashboard() {
 
       {/* charts */}
       <section className="grid lg:grid-cols-2 gap-4">
+        {/* Gráfico 1: Saldo entre os meses */}
         <Card className="p-5">
           <ChartHead title="Saldo entre os meses" note="positivo ou negativo a cada mês" />
           {balanceSeries.length ? (
@@ -107,6 +117,7 @@ export default function Dashboard() {
           ) : <Empty />}
         </Card>
 
+        {/* Gráfico 2: Salário acumulado */}
         <Card className="p-5">
           <ChartHead title="Salário acumulado" note="somado mês a mês ao longo do ano" />
           {salarySeries.length ? (
@@ -128,19 +139,54 @@ export default function Dashboard() {
           ) : <Empty />}
         </Card>
 
-        <Card className="p-5 lg:col-span-2">
-          <ChartHead title="Projeção de saldo" note="6 meses à frente · fatura e contas descontadas no recebimento" />
-          <ResponsiveContainer width="100%" height={240}>
-            <LineChart data={projSeries} margin={{ left: -8 }}>
-              <CartesianGrid stroke="#C8C0A8" strokeDasharray="2 4" vertical={false} />
-              <XAxis dataKey="label" tick={axis} axisLine={false} tickLine={false} />
-              <YAxis tick={axis} axisLine={false} tickLine={false} tickFormatter={compact} width={64} />
-              <Tooltip formatter={(v) => BRL(v)} />
-              <ReferenceLine y={0} stroke="#7E3030" strokeDasharray="4 4" />
-              <Line type="monotone" dataKey="projected" name="saldo projetado"
-                stroke="#234A3C" strokeWidth={2.5} dot={{ r: 3, fill: '#234A3C' }} />
-            </LineChart>
-          </ResponsiveContainer>
+        {/* Gráfico 3: Gastos por categoria (Design Moderno & Responsivo) */}
+        <Card className="p-5 lg:col-span-2 flex flex-col">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
+            <ChartHead
+              title="Gastos por categoria"
+              note={`${monthLabel(firstOfThisMonth())} · para onde o dinheiro foi (fora pagamento de fatura)`}
+              className="mb-0"
+            />
+            {categorySeries.length > 0 && (
+              <div className="bg-ink/[0.03] border border-ink/5 rounded-xl px-4 py-2 flex flex-col items-end sm:min-w-[140px]">
+                <span className="text-[10px] uppercase tracking-wider text-ink/50">Total no mês</span>
+                <Money value={categoryTotal} className="text-xl font-medium text-ink mt-0.5" />
+              </div>
+            )}
+          </div>
+
+          {categorySeries.length ? (
+            <div className="flex-1 w-full mt-2">
+              <ResponsiveContainer width="100%" height={Math.max(200, categorySeries.length * 52)}>
+                <BarChart data={categorySeries} layout="vertical" margin={{ left: 0, right: 80, top: 0, bottom: 0 }}>
+                  <XAxis type="number" hide />
+                  <YAxis 
+                    type="category" 
+                    dataKey="category" 
+                    tick={{ fontFamily: 'IBM Plex Mono', fontSize: 12, fill: '#1C2620', fontWeight: 500 }} 
+                    axisLine={false} 
+                    tickLine={false} 
+                    width={100} 
+                  />
+                  <Tooltip content={<CategoryTooltip />} cursor={{ fill: 'rgba(35,74,60,0.04)' }} />
+                  <Bar dataKey="total" radius={[0, 6, 6, 0]} barSize={28} animationDuration={1000}>
+                    {categorySeries.map((d, i) => (
+                      <Cell key={i} fill={CAT_COLORS[i % CAT_COLORS.length]} opacity={0.9} />
+                    ))}
+                    <LabelList
+                      dataKey="total" 
+                      position="right"
+                      offset={12}
+                      formatter={(v) => BRL(v)}
+                      style={{ fontFamily: 'IBM Plex Mono', fontSize: 12, fill: '#1C262099', fontWeight: 500 }}
+                    />
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <Empty text="Nenhum gasto lançado este mês ainda. Registre despesas em “Movimentações” para ver a distribuição por categoria." />
+          )}
         </Card>
       </section>
     </div>
@@ -160,21 +206,36 @@ function Stat({ label, value, tone = 'currency', hint }) {
   )
 }
 
-function ChartHead({ title, note }) {
+function ChartHead({ title, note, className = "mb-4" }) {
   return (
-    <div className="mb-4">
+    <div className={className}>
       <h3 className="font-display text-lg text-ink">{title}</h3>
-      <p className="text-xs text-ink/50">{note}</p>
+      <p className="text-xs text-ink/50 max-w-sm">{note}</p>
     </div>
   )
 }
 
-function Empty() {
+function Empty({ text }) {
   return (
     <div className="h-[220px] flex items-center justify-center text-center">
-      <p className="text-sm text-ink/45 max-w-[15rem]">
-        Sem registros ainda. Faça uma movimentação ou ajuste seu saldo para começar a desenhar o gráfico.
+      <p className="text-sm text-ink/45 max-w-[16rem]">
+        {text || "Sem registros ainda. Faça uma movimentação ou ajuste seu saldo para começar a desenhar o gráfico."}
       </p>
     </div>
   )
+}
+
+// Tooltip Personalizado Premium para Gastos de Categoria
+function CategoryTooltip({ active, payload }) {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-[#FAF9F5] border border-[#C8C0A8]/50 shadow-sm rounded-lg py-2 px-3">
+        <p className="text-[10px] uppercase tracking-wider text-ink/50 mb-0.5">
+          {payload[0].payload.category}
+        </p>
+        <Money value={payload[0].value} className="text-base font-medium text-ink" />
+      </div>
+    )
+  }
+  return null
 }
